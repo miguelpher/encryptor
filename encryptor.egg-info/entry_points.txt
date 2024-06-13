@@ -1,0 +1,2 @@
+[console_scripts]
+encryptor = encryptor.main:cli

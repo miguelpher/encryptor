@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: encryptor
+Version: 0.0.1
+Summary: File encryption tool
+Maintainer: mi2354
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: click
+Requires-Dist: cryptography
+
+# Encryptor
+
+In contruction...
