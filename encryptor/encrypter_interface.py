@@ -9,14 +9,11 @@ class Encrypter(Protocol):
     key: str
 
     @classmethod
-    def generate_key(cls) -> bytes:
-        ...
-    
-    def encrypt(self, data: bytes, **kwargs) -> bytes:
-        ...
+    def generate_key(cls) -> bytes: ...
 
-    def decrypt(self, token: bytes, **kwargs) -> bytes:
-        ...
+    def encrypt_file(self, input_file: str | Path, output_file: str | Path) -> None: ...
+
+    def decrypt_file(self, input_file: str | Path, output_file: str | Path) -> None: ...
 
 
 class EncryptionMethod(StrEnum):
@@ -25,7 +22,7 @@ class EncryptionMethod(StrEnum):
 
 class Operation(StrEnum):
     ENCRYPT = auto()
-    DECRYIPT = auto()
+    DECRYPT = auto()
 
 
 @dataclass
@@ -35,4 +32,3 @@ class Task:
     operation: Operation
     key_folder: str | Path
     method: EncryptionMethod
-

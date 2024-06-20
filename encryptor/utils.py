@@ -1,5 +1,5 @@
 from enum import StrEnum
-from cryptography.fernet import Fernet
+from .encryptors import FernetExpanded
 
 from .encrypter_interface import EncryptionMethod, Encrypter, Operation
 
@@ -23,6 +23,6 @@ def get_parsed_method(method_str) -> EncryptionMethod:
 def load_encryption_method(method: EncryptionMethod) -> Encrypter:
     match method:
         case EncryptionMethod.FERNET:
-            return Fernet
+            return FernetExpanded
         case _:
             raise ValueError("Encryption method not supported")

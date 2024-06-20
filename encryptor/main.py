@@ -1,24 +1,26 @@
 import click
-from .encrypter_interface import Task, Encrypter, Operation
+from os import PathLike
+from .encrypter_interface import Task, Encrypter, Operation, EncryptionMethod
 from .key_manager import KEY_FOLDER, KeyManager
 from .utils import load_encryption_method, get_parsed_operation, get_parsed_method
 
 
-def init_encrypter(method, key_folder) -> Encrypter:
+def init_encrypter(method: EncryptionMethod, key_folder: str | PathLike) -> Encrypter:
     encrypter = load_encryption_method(method)
     key_manager = KeyManager(key_folder, method)
     return encrypter(key_manager.get_key())
 
 
-def process_task(task: Task,):
+def process_task(task: Task):
     encrypter = init_encrypter(task.method, task.key_folder)
     match task.operation:
         case Operation.ENCRYPT:
-            pass
-        case Operation.DECRYIPT:
-            pass
+            encrypter.encrypt_file(input_file=task.input_file, output_file=task.output_file)
+        case Operation.DECRYPT:
+            encrypter.decrypt_file(input_file=task.input_file, output_file=task.output_file)
         case _:
             raise ValueError(f"Operation {task.operation} not feasible")
+    print(f"{task.operation} finished")
 
 
 @click.command()
@@ -26,8 +28,16 @@ def process_task(task: Task,):
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path(exists=False))
 @click.option("-k", "--key-folder", type=str, default=KEY_FOLDER, help=f"{KEY_FOLDER} by default")
-@click.option("-m", "--method", type=str, default="fernet", help=f"Encryption method. Only fernet supported in this version")
-def cli(operation: str, input_filepath: str, output_filepath: str, key_folder: str, method: str) -> Task:
+@click.option(
+    "-m",
+    "--method",
+    type=str,
+    default="fernet",
+    help=f"Encryption method. Only fernet supported in this version",
+)
+def cli(
+    operation: str, input_filepath: str, output_filepath: str, key_folder: str, method: str
+) -> Task:
     """Encrypt or decrypt a file and write the result to another file\n
     OPERATION: encrypt | decrypt\n
     INPUT_FILEPATH: any filepath that exists\n
